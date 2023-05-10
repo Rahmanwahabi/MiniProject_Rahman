@@ -12,5 +12,4 @@ type Siswa struct {
 	Nis      string   `json:"nis" form:"nis"`
 	Kelas    tagKType `json:"kelas" form:"kelas" gorm:"type:enum('Ipa', 'Ips');default:'Ipa'"`
 	Jk       string   `json:"jk" form:"jk" gorm:"type:enum('Laki-laki', 'Perempuan');default:'Laki-laki'"`
-	Token    string   `json:"token" form:"token"`
 }

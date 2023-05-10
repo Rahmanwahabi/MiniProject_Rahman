@@ -5,21 +5,15 @@ import (
 	"MiniProject_Rahman/models"
 )
 
-func CreateSiswa(siswa *models.Siswa) error {
-	if err := config.DB.Create(siswa).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
-func GetAllSiswa() (siswa []models.Siswa, err error) {
-	if err = config.DB.Find(&siswa).Error; err != nil {
+func GetAllSiswa() (siswas []models.Siswa, err error) {
+	if err = config.DB.Find(&siswas).Error; err != nil {
 		return
 	}
 	return
 }
 
-func GetSiswa(siswa *models.Siswa) (err error) {
+func GetSiswa(id uint) (siswa models.Siswa, err error) {
+	siswa.ID = id
 	if err = config.DB.First(&siswa).Error; err != nil {
 		return
 	}
@@ -29,20 +23,22 @@ func GetSiswa(siswa *models.Siswa) (err error) {
 func UpdateSiswa(siswa *models.Siswa) error {
 	if err := config.DB.Updates(siswa).Error; err != nil {
 		return err
+
 	}
 	return nil
 }
-
 func DeleteSiswa(siswa *models.Siswa) error {
 	if err := config.DB.Delete(siswa).Error; err != nil {
 		return err
+
 	}
 	return nil
 }
 
-func LoginSiswa(siswa *models.Siswa) error {
-	if err := config.DB.Where("email = ? AND password = ?", siswa.Email, siswa.Password).First(&siswa).Error; err != nil {
-		return err
+func CreateSiswa(siswa *models.Siswa) error {
+	if arr := config.DB.Create(siswa).Error; arr != nil {
+		return arr
+
 	}
 	return nil
 }

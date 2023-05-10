@@ -1,3 +1,5 @@
 package constants
 
-const SECRET_JWT = "requiem"
+const (
+	SECRET_JWT = "user"
+)
