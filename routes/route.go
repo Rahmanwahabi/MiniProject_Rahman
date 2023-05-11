@@ -35,6 +35,7 @@ func New(e *echo.Echo, db *gorm.DB, guruController *controllers.GuruController) 
 	kelasUseCase := usecase.NewKelasUseCase()
 	mapelUseCase := usecase.NewMapelUseCase()
 	soalUseCase := usecase.NewSoalUseCase()
+	answerUseCase := usecase.NewAnswerUseCase()
 
 	// Membuat instance dari Controller dengan menginject UseCase
 	siswaController := controllers.NewSiswaController(*siswaUseCase)
@@ -42,6 +43,7 @@ func New(e *echo.Echo, db *gorm.DB, guruController *controllers.GuruController) 
 	kelasController := controllers.NewKelasController(kelasUseCase)
 	mapelController := controllers.NewMapelController(mapelUseCase)
 	soalController := controllers.NewSoalController(soalUseCase)
+	answerController := controllers.NewAnswerController(answerUseCase)
 
 	// user collection
 	user := e.Group("/users")
@@ -65,10 +67,10 @@ func New(e *echo.Echo, db *gorm.DB, guruController *controllers.GuruController) 
 	guru := e.Group("/guru")
 	guru.Use(middlewares.JWT())
 	guru.GET("", guruController.GetAllGuru)
-	guru.GET(":id", guruController.GetGuru)
+	guru.GET("/:id", guruController.GetGuru)
 	guru.POST("", guruController.CreateGuru)
-	guru.PUT(":id", guruController.UpdateGuru)
-	guru.DELETE(":id", guruController.DeleteGuru)
+	guru.PUT("/:id", guruController.UpdateGuru)
+	guru.DELETE("/:id", guruController.DeleteGuru)
 
 	// role collection
 
@@ -109,5 +111,15 @@ func New(e *echo.Echo, db *gorm.DB, guruController *controllers.GuruController) 
 	soal.POST("", soalController.CreateSoal)
 	soal.PUT("/:id", soalController.UpdateSoal)
 	soal.DELETE("/:id", soalController.DeleteSoal)
+
+	// answer collection
+
+	answer := e.Group("/answer")
+	answer.Use(middlewares.JWT())
+	answer.GET("", answerController.GetAnswers)
+	answer.GET("/:id", answerController.GetAnswer)
+	answer.POST("", answerController.CreateAnswer)
+	answer.PUT("/:id", answerController.UpdateAnswer)
+	answer.DELETE("/:id", answerController.DeleteAnswer)
 
 }
