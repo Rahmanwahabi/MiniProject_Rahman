@@ -54,4 +54,5 @@ func InitMigrate() {
 	DB.AutoMigrate(&models.Kelas{})
 	DB.AutoMigrate(&models.Mapel{})
 	DB.AutoMigrate(&models.Soal{})
+	DB.AutoMigrate(&models.Role{})
 }

@@ -29,6 +29,20 @@ func New(e *echo.Echo, db *gorm.DB, guruController *controllers.GuruController) 
 	e.POST("/login", controllers.LoginUserController)
 	e.POST("/register", controllers.CreateUserController)
 
+	// Membuat instance dari usecase
+	siswaUseCase := usecase.NewSiswaUseCase()
+	roleUseCase := usecase.NewRoleUseCase()
+	kelasUseCase := usecase.NewKelasUseCase()
+	mapelUseCase := usecase.NewMapelUseCase()
+	soalUseCase := usecase.NewSoalUseCase()
+
+	// Membuat instance dari Controller dengan menginject UseCase
+	siswaController := controllers.NewSiswaController(*siswaUseCase)
+	roleController := controllers.NewRoleController(roleUseCase)
+	kelasController := controllers.NewKelasController(kelasUseCase)
+	mapelController := controllers.NewMapelController(mapelUseCase)
+	soalController := controllers.NewSoalController(soalUseCase)
+
 	// user collection
 	user := e.Group("/users")
 	user.Use(middlewares.JWT())
@@ -39,12 +53,6 @@ func New(e *echo.Echo, db *gorm.DB, guruController *controllers.GuruController) 
 	user.DELETE("/:id", controllers.DeleteUserController)
 
 	// siswa collection
-	// Membuat instance SiswaUseCase
-	siswaUseCase := usecase.NewSiswaUseCase()
-	// Membuat instance SiswaController dan menyediakan SiswaUseCase
-	siswaController := controllers.NewSiswaController(*siswaUseCase)
-
-	// Define route handlers
 	siswa := e.Group("/siswa")
 	siswa.Use(middlewares.JWT())
 	siswa.GET("", siswaController.GetAllSiswa)        // Changed function signature
@@ -53,6 +61,7 @@ func New(e *echo.Echo, db *gorm.DB, guruController *controllers.GuruController) 
 	siswa.PUT("/:id", siswaController.UpdateSiswa)    // Changed function signature
 	siswa.DELETE("/:id", siswaController.DeleteSiswa) // Changed function signature
 
+	// guru collection
 	guru := e.Group("/guru")
 	guru.Use(middlewares.JWT())
 	guru.GET("", guruController.GetAllGuru)
@@ -60,5 +69,45 @@ func New(e *echo.Echo, db *gorm.DB, guruController *controllers.GuruController) 
 	guru.POST("", guruController.CreateGuru)
 	guru.PUT(":id", guruController.UpdateGuru)
 	guru.DELETE(":id", guruController.DeleteGuru)
+
+	// role collection
+
+	role := e.Group("/roles")
+	role.Use(middlewares.JWT())
+	role.GET("", roleController.GetRoles)
+	role.GET("/:id", roleController.GetRole)
+	role.POST("", roleController.CreateRole)
+	role.PUT("/:id", roleController.UpdateRole)
+	role.DELETE("/:id", roleController.DeleteRole)
+
+	// kelas collection
+
+	kelas := e.Group("/kelas")
+	kelas.Use(middlewares.JWT())
+	kelas.GET("", kelasController.GetKelases)
+	kelas.GET("/:id", kelasController.GetKelas)
+	kelas.POST("", kelasController.CreateKelas)
+	kelas.PUT("/:id", kelasController.UpdateKelas)
+	kelas.DELETE("/:id", kelasController.DeleteKelas)
+
+	// mapel collection
+
+	mapel := e.Group("/mapel")
+	mapel.Use(middlewares.JWT())
+	mapel.GET("", mapelController.GetMapels)
+	mapel.GET("/:id", mapelController.GetMapel)
+	mapel.POST("", mapelController.CreateMapel)
+	mapel.PUT("/:id", mapelController.UpdateMapel)
+	mapel.DELETE("/:id", mapelController.DeleteMapel)
+
+	// soal collection
+
+	soal := e.Group("/soal")
+	soal.Use(middlewares.JWT())
+	soal.GET("", soalController.GetSoals)
+	soal.GET("/:id", soalController.GetSoal)
+	soal.POST("", soalController.CreateSoal)
+	soal.PUT("/:id", soalController.UpdateSoal)
+	soal.DELETE("/:id", soalController.DeleteSoal)
 
 }
